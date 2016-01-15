@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Main Palette -->
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#3849a7</color>
+
+    <!-- ColorPrimary in increasing bright order | http://www.hexcolortool.com/ -->
+    <color name="colorPrimaryLighter10">#5263C1</color>
+    <color name="colorPrimaryLighter20">#6B7CDA</color>
+    <color name="colorPrimaryLighter30">#8596F4</color>
+    <color name="colorPrimaryLighter40">#9EAFFF</color>
+    <color name="colorPrimaryLighter50">#B7C8FF</color>
+    <color name="colorPrimaryLighter60">#D1E2FF</color>
+    <color name="colorPrimaryLighter70">#EBFCFF</color>
+
+    <!-- First ColorPrimary Complimentary Color in increasing bright order -->
+
+    <!-- Second ColorPrimary Complimentary Color in increasing bright order -->
+
+    <!-- Shades of DarkGray in increasing bright order -->
+    <color name="darkGray">#333333</color>
+    <color name="darkGrayLighter10">#4D4D4D</color>
+    <color name="darkGrayLighter20">#666666</color>
+    <color name="darkGrayLighter30">#808080</color>
+    <color name="darkGrayLighter40">#999999</color>
+    <color name="darkGrayLighter50">#B2B2B2</color>
+    <color name="darkGrayLighter60">#CCCCCC</color>
+    <color name="darkGrayLighter70">#E6E6E6</color>
+
+    <!-- Pop Up Menu Colors -->
+    <color name="popupMenuBackgroundColor">#d1d1d1</color>
+    <color name="popupMenuTextColor">#33393d</color>
+
+    <!-- Custom Button Colors -->
+    <color name="buttonStartColor">#3849a7</color>
+    <color name="buttonEndColor">#3849a7</color>
+    <color name="buttonStrokeColor">#3849a7</color>
+    <color name="buttonStatePressedStartColor">#3849a7</color>
+    <color name="buttonStatePressedEndColor">#3849a7</color>
+    <color name="buttonStatePressedStrokeColor">#3849a7</color>
+    <color name="buttonStateFocusedStartColor">#3849a7</color>
+    <color name="buttonStateFocusedEndColor">#3849a7</color>
+    <color name="buttonStateFocusedStrokeColor">#3849a7</color>
+
+
+</resources>
