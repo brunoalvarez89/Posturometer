@@ -24,13 +24,9 @@ public class MainActivity extends AppCompatActivity
     /*
     ATTRIBUTES
      */
-    // Toolbar
-    private Toolbar mToolbar;
 
     // Tabs
-    private ViewPager mViewPager;
     private ViewPagerAdapter mViewPagerAdapter;
-    private SlidingTabLayout mTabs;
     private CharSequence mTabTitles[] = {"INICIO", "AJUSTES"};
     private int mTotalTabs = 2;
 
@@ -185,63 +181,54 @@ public class MainActivity extends AppCompatActivity
     private void updateFrontAngleTextView(int frontAngle) {
         TextView textView = (TextView) ((MainTab) (mViewPagerAdapter.getItem(0))).getView(MainTabView.TEXTVIEW_FRONT_ANGLE);
 
-        if(frontAngle == 0) {
+        if (frontAngle == 0) {
             textView.setText("0°");
-            return;
         }
 
-        if(frontAngle > mFrontAngleThreshold) {
+        if (frontAngle > mFrontAngleThreshold) {
             textView.setTextColor(Color.RED);
             textView.setText(String.valueOf(frontAngle) + "°");
-            return;
         }
 
-        if(frontAngle < mFrontAngleThreshold) {
+        if (frontAngle < mFrontAngleThreshold) {
             textView.setTextColor(Color.BLACK);
             textView.setText(String.valueOf(frontAngle) + "°");
-            return;
         }
     }
 
     private void updateRightAngleTextView(int rightAngle) {
         TextView textView = (TextView) ((MainTab) (mViewPagerAdapter.getItem(0))).getView(MainTabView.TEXTVIEW_RIGHT_ANGLE);
 
-        if(rightAngle == 0) {
+        if (rightAngle == 0) {
             textView.setText("0°");
-            return;
         }
 
-        if(rightAngle > mLateralAngleThreshold) {
+        if (rightAngle > mLateralAngleThreshold) {
             textView.setTextColor(Color.RED);
             textView.setText(String.valueOf(rightAngle) + "°");
-            return;
         }
 
-        if(rightAngle < mLateralAngleThreshold) {
+        if (rightAngle < mLateralAngleThreshold) {
             textView.setTextColor(Color.BLACK);
             textView.setText(String.valueOf(rightAngle) + "°");
-            return;
         }
     }
 
     private void updateLeftAngleTextView(int leftAngle) {
         TextView textView = (TextView)((MainTab) (mViewPagerAdapter.getItem(0))).getView(MainTabView.TEXTVIEW_LEFT_ANGLE);
 
-        if(leftAngle == 0) {
+        if (leftAngle == 0) {
             textView.setText("0°");
-            return;
         }
 
-        if(leftAngle > mLateralAngleThreshold) {
+        if (leftAngle > mLateralAngleThreshold) {
             textView.setTextColor(Color.RED);
             textView.setText(String.valueOf(leftAngle) + "°");
-            return;
         }
 
-        if(leftAngle < mLateralAngleThreshold) {
+        if (leftAngle < mLateralAngleThreshold) {
             textView.setTextColor(Color.BLACK);
             textView.setText(String.valueOf(leftAngle) + "°");
-            return;
         }
     }
 
@@ -265,8 +252,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setupActionBar() {
         // Inflate Toolbar
-        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
 
 
         // Get the ActionBar to configure the way it behaves
@@ -289,14 +276,14 @@ public class MainActivity extends AppCompatActivity
         mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mTabTitles, mTotalTabs);
 
         // Inflate ViewPager and attach Adapter
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mViewPagerAdapter);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(mViewPagerAdapter);
 
         // Inflate Tabs
-        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        mTabs.setDistributeEvenly(true);
+        SlidingTabLayout slidingTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        slidingTabs.setDistributeEvenly(true);
         // Set Indicator Color
-        mTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+        slidingTabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getSelectedTextColor(int position) {
                 return ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryLighter70);
@@ -309,7 +296,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Attach the ViewPager to the SlidingTabsLayout
-        mTabs.setViewPager(mViewPager);
+        slidingTabs.setViewPager(viewPager);
     }
 
     private void inflate() {
