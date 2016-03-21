@@ -32,7 +32,7 @@ public class SettingsTab extends Fragment {
     private SeekBar mSeekBarDelay;
 
     // SeekBar Interface
-    private SettingsTabCommunicator mSettingsTabCommunicator;
+    private SettingsTabInterface mSettingsTabInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,13 +59,13 @@ public class SettingsTab extends Fragment {
         mSeekBarFrontAngle.setProgress(45);
 
         mSeekBarFrontVibration = (SeekBar) view.findViewById(R.id.seekBarFrontVibration);
-        mSeekBarFrontVibration.setProgress(10);
+        mSeekBarFrontVibration.setProgress(5);
 
         mSeekBarLateralAngle = (SeekBar) view.findViewById(R.id.seekBarLateralAngle);
         mSeekBarLateralAngle.setProgress(45);
 
         mSeekBarLateralVibration = (SeekBar) view.findViewById(R.id.seekBarLateralVibration);
-        mSeekBarLateralVibration.setProgress(10);
+        mSeekBarLateralVibration.setProgress(5);
 
         mSeekBarDelay = (SeekBar) view.findViewById(R.id.seekBarDelay);
         mSeekBarDelay.setProgress(5);
@@ -76,7 +76,7 @@ public class SettingsTab extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mTextViewFrontAngle.setText("Ángulo Frontal: " + progress + "°");
-                mSettingsTabCommunicator.seekBarProgressChanged(SeekBarType.SEEKBAR_FRONT_ANGLE, progress);
+                mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_FRONT_ANGLE, progress);
             }
 
             @Override
@@ -93,8 +93,8 @@ public class SettingsTab extends Fragment {
         mSeekBarFrontVibration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTextViewFrontVibration.setText("Vibración Frontal: " + progress);
-                mSettingsTabCommunicator.seekBarProgressChanged(SeekBarType.SEEKBAR_FRONT_VIBRATION, progress);
+                mTextViewFrontVibration.setText("Vibración Frontal: " + progress + " Hz");
+                mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_FRONT_VIBRATION, progress);
             }
 
             @Override
@@ -112,7 +112,7 @@ public class SettingsTab extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 mTextViewLateralAngle.setText("Ángulo Lateral: " + progress + "°");
-                mSettingsTabCommunicator.seekBarProgressChanged(SeekBarType.SEEKBAR_LATERAL_ANGLE, progress);
+                mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_LATERAL_ANGLE, progress);
             }
 
             @Override
@@ -129,8 +129,8 @@ public class SettingsTab extends Fragment {
         mSeekBarLateralVibration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTextViewLateralVibration.setText("Vibración Lateral: " + progress);
-                mSettingsTabCommunicator.seekBarProgressChanged(SeekBarType.SEEKBAR_LATERAL_VIBRATION, progress);
+                mTextViewLateralVibration.setText("Vibración Lateral: " + progress + " Hz");
+                mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_LATERAL_VIBRATION, progress);
             }
 
             @Override
@@ -147,8 +147,9 @@ public class SettingsTab extends Fragment {
         mSeekBarDelay.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTextViewDelay.setText("Tiempo de Espera: " + progress + " s");
-                mSettingsTabCommunicator.seekBarProgressChanged(SeekBarType.SEEKBAR_DELAY, progress);
+                float number = progress*0.5f;
+                mTextViewDelay.setText("Tiempo de Espera: " + number + " s");
+                mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_DELAY, progress);
             }
 
             @Override
@@ -163,13 +164,50 @@ public class SettingsTab extends Fragment {
         });
     }
 
-    public interface SettingsTabCommunicator {
+    public interface SettingsTabInterface {
         void seekBarProgressChanged(SeekBarType seekBarType, int progress);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mSettingsTabCommunicator = (SettingsTabCommunicator) context;
+        mSettingsTabInterface = (SettingsTabInterface) context;
+    }
+
+    public View getView(SettingsTabView settingsTabView) {
+        switch (settingsTabView) {
+            case SEEKBAR_FRONT_ANGLE_THRESHOLD:
+                return mSeekBarFrontAngle;
+
+            case SEEKBAR_FRONT_VIBRATION:
+                return mSeekBarFrontVibration;
+
+            case SEEKBAR_LATERAL_ANGLE_THRESHOLD:
+                return mSeekBarLateralAngle;
+
+            case SEEKBAR_LATERAL_VIBRATION:
+                return mSeekBarLateralVibration;
+
+            case SEEKBAR_DELAY:
+                return mSeekBarDelay;
+
+            case TEXTVIEW_FRONT_ANGLE_THRESHOLD:
+                return mTextViewFrontAngle;
+
+            case TEXTVIEW_FRONT_VIBRATION:
+                return mTextViewFrontVibration;
+
+            case TEXTVIEW_LATERAL_ANGLE_THRESHOLD:
+                return mTextViewLateralAngle;
+
+            case TEXTVIEW_LATERAL_VIBRATION:
+                return mTextViewLateralVibration;
+
+            case TEXTVIEW_DELAY:
+                return mTextViewDelay;
+
+            default:
+                return null;
+        }
     }
 }

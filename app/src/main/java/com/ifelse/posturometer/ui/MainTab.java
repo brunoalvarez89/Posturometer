@@ -20,7 +20,7 @@ public class MainTab extends Fragment implements View.OnClickListener {
     private Button mButtonStart;
     private boolean mStart;
 
-    private MainTabCommunicator mMainTabCommunicator;
+    private MainTabInterface mMainTabInterface;
 
     private TextView mTextViewFrontAngle;
     private TextView mTextViewRightAngle;
@@ -57,25 +57,25 @@ public class MainTab extends Fragment implements View.OnClickListener {
                 mStart = !mStart;
 
                 if (mStart) {
-                    mMainTabCommunicator.buttonStart(true);
+                    mMainTabInterface.buttonStart(true);
                     mButtonStart.setText("Parar");
                 }
                 else {
-                    mMainTabCommunicator.buttonStart(false);
+                    mMainTabInterface.buttonStart(false);
                     mButtonStart.setText("Empezar");
                 }
                 break;
         }
     }
 
-    public interface MainTabCommunicator {
+    public interface MainTabInterface {
         void buttonStart(boolean start);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mMainTabCommunicator = (MainTabCommunicator) context;
+        mMainTabInterface = (MainTabInterface) context;
     }
 
     public View getView(MainTabView mainTabView) {

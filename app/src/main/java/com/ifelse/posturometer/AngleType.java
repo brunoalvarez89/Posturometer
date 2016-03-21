@@ -4,7 +4,8 @@ public enum AngleType {
 
     ERROR(-1),
     FRONT_ANGLE(1),
-    LATERAL_ANGLE(2);
+    LATERAL_ANGLE(2),
+    NONE(3);
 
     private final int value;
 
@@ -21,6 +22,9 @@ public enum AngleType {
 
             case 2:
                 return LATERAL_ANGLE;
+
+            case 3:
+                return NONE;
 
             default:
                 return ERROR;

@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ifelse.posturometer.R;
-import com.ifelse.posturometer.ui.SlidingTabStrip;
+import com.ifelse.posturometer.slidingtabs.SlidingTabStrip;
 
 
 public class SlidingTabLayout extends HorizontalScrollView{
