@@ -1,4 +1,4 @@
-package com.ifelse.posturometer;
+package com.genomicalsoftware.posturometer;
 
 public enum AngleType {
 

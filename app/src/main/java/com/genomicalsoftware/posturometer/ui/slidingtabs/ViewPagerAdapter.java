@@ -1,13 +1,11 @@
-package com.ifelse.posturometer.ui;
+package com.genomicalsoftware.posturometer.ui.slidingtabs;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 
-import java.util.List;
+import com.genomicalsoftware.posturometer.ui.MainTab;
+import com.genomicalsoftware.posturometer.ui.SettingsTab;
 
 /**
  * Created by Bruno on 31/10/2015.

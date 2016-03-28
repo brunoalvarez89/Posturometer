@@ -1,4 +1,4 @@
-package com.ifelse.posturometer.ui;
+package com.genomicalsoftware.posturometer.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.ifelse.posturometer.R;
+import com.genomicalsoftware.posturometer.R;
 
 /**
  * Created by Bruno on 31/10/2015.

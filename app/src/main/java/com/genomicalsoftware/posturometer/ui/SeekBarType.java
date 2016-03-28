@@ -1,4 +1,4 @@
-package com.ifelse.posturometer.ui;
+package com.genomicalsoftware.posturometer.ui;
 
 public enum SeekBarType {
 

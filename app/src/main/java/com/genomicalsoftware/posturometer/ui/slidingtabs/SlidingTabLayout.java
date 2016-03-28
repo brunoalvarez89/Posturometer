@@ -1,4 +1,4 @@
-package com.ifelse.posturometer.slidingtabs;
+package com.genomicalsoftware.posturometer.ui.slidingtabs;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -17,8 +17,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ifelse.posturometer.R;
-import com.ifelse.posturometer.slidingtabs.SlidingTabStrip;
+import com.genomicalsoftware.posturometer.R;
 
 
 public class SlidingTabLayout extends HorizontalScrollView{

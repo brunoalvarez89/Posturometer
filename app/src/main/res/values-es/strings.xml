@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Posturometer</string>
+    <string name="action_about">About</string>
+    <string name="action_help">Help</string>
+    <string name="action_spanish">Español</string>
+    <string name="action_english">English</string>
+    <string name="button_acquiring_angles">Acquiring initial angles...</string>
+    <string name="button_stop">Stop</string>
+    <string name="button_start">Go</string>
+    <string name="tab_main_title">Start</string>
+    <string name="tab_settings_title">Settings</string>
+    <string name="textview_front_angle">Front Angle</string>
+    <string name="textview_front_vibration">Front Vibration</string>
+    <string name="textview_lateral_angle">Lateral Angle</string>
+    <string name="textview_lateral_vibration">Lateral Vibration</string>
+    <string name="textivew_user_delay">Waiting Time</string>
+</resources>

@@ -1,4 +1,4 @@
-package com.ifelse.posturometer.slidingtabs;
+package com.genomicalsoftware.posturometer.ui.slidingtabs;
 
 import android.R;
 import android.content.Context;
@@ -10,8 +10,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.ifelse.posturometer.slidingtabs.SlidingTabLayout;
 
 class SlidingTabStrip extends LinearLayout {
 
