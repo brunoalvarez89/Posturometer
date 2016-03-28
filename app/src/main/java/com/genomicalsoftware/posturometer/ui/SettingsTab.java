@@ -75,7 +75,8 @@ public class SettingsTab extends Fragment {
         mSeekBarFrontAngle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTextViewFrontAngle.setText("Ángulo Frontal: " + progress + "°");
+                String stringFromResources = getResources().getString(R.string.textview_front_angle);
+                mTextViewFrontAngle.setText(stringFromResources + ": " + progress + "°");
                 mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_FRONT_ANGLE, progress);
             }
 
@@ -93,7 +94,8 @@ public class SettingsTab extends Fragment {
         mSeekBarFrontVibration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTextViewFrontVibration.setText("Vibración Frontal: " + progress + " Hz");
+                String stringFromResources = getResources().getString(R.string.textview_front_vibration);
+                mTextViewFrontVibration.setText(stringFromResources + ": " + progress + " Hz");
                 mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_FRONT_VIBRATION, progress);
             }
 
@@ -111,7 +113,8 @@ public class SettingsTab extends Fragment {
         mSeekBarLateralAngle.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTextViewLateralAngle.setText("Ángulo Lateral: " + progress + "°");
+                String stringFromResources = getResources().getString(R.string.textview_lateral_angle);
+                mTextViewLateralAngle.setText(stringFromResources + ": " + progress + "°");
                 mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_LATERAL_ANGLE, progress);
             }
 
@@ -129,7 +132,8 @@ public class SettingsTab extends Fragment {
         mSeekBarLateralVibration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mTextViewLateralVibration.setText("Vibración Lateral: " + progress + " Hz");
+                String stringFromResources = getResources().getString(R.string.textview_lateral_vibration);
+                mTextViewLateralVibration.setText(stringFromResources + ": " + progress + " Hz");
                 mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_LATERAL_VIBRATION, progress);
             }
 
@@ -148,7 +152,8 @@ public class SettingsTab extends Fragment {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 float number = progress*0.5f;
-                mTextViewDelay.setText("Tiempo de Espera: " + number + " s");
+                String stringFromResources = getResources().getString(R.string.textview_user_delay);
+                mTextViewDelay.setText(stringFromResources + ": " + number + " s");
                 mSettingsTabInterface.seekBarProgressChanged(SeekBarType.SEEKBAR_DELAY, progress);
             }
 

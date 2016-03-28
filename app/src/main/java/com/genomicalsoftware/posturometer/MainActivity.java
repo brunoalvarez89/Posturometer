@@ -17,15 +17,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.genomicalsoftware.posturometer.slidingtabs.SlidingTabLayout;
+import com.genomicalsoftware.posturometer.ui.slidingtabs.SlidingTabLayout;
 import com.genomicalsoftware.posturometer.ui.MainTab;
 import com.genomicalsoftware.posturometer.ui.SeekBarType;
 import com.genomicalsoftware.posturometer.ui.SettingsTab;
 import com.genomicalsoftware.posturometer.ui.SettingsTabView;
-import com.genomicalsoftware.posturometer.ui.ViewPagerAdapter;
+import com.genomicalsoftware.posturometer.ui.slidingtabs.ViewPagerAdapter;
 import com.genomicalsoftware.posturometer.ui.MainTabView;
 
 public class MainActivity extends AppCompatActivity
@@ -37,12 +38,12 @@ public class MainActivity extends AppCompatActivity
 
     // Tabs
     private ViewPagerAdapter mViewPagerAdapter;
-    private CharSequence mTabTitles[] = {"INICIO", "AJUSTES"};
+    private CharSequence mTabTitles[];
     private int mTotalTabs = 2;
 
     // Accelerometer
     private SensorManager mSensorManager;
-    private double mSensorSamplingPeriod = 50; // in ms
+    private double mSensorSamplingPeriod = 25; // in ms
     private float[] mAccelerationLP;
     private float[] mAcceleration2LP;
     private float[] mAcceleration3LP;
@@ -71,13 +72,14 @@ public class MainActivity extends AppCompatActivity
     private int mInitialAngleAcquisitionDelaySampleCount;
     private boolean mInitialAnglesOk;
 
-    // Smartphone Positioning
+    // Device Positioning
     private int mPositioningDelay = 5000; // in ms
     private int mPositioningDelaySampleCount;
     private boolean mPositioningOk;
     private int mPositioningVibrationDelay = 1000;
     private int mPositioningVibrationDelaySampleCount;
     private boolean mPositioningVibrationOk = true;
+    private int mPositioningSecondCount = mPositioningDelay / 1000;
 
     // User Response Delay
     private int mUserResponseDelay; // in ms
@@ -86,6 +88,9 @@ public class MainActivity extends AppCompatActivity
 
     // Preferences
     private boolean mPreferencesLoaded;
+
+    // Debud
+    private long mOldTime;
 
     //endregion
 
@@ -98,40 +103,41 @@ public class MainActivity extends AppCompatActivity
         //Log.d("time", deltaTime + ", ");
         //mOldTime = currentTime;
 
-        lowPass(sensorData);
-        normalize();
+        if (mAcquiringOk) {
 
-        if(mPositioningOk) {
-            if (mAcquiringOk) {
+            lowPass(sensorData);
+            normalize();
+
+            if (mPositioningOk) {
+
                 if (mInitialAnglesOk) {
 
                     checkAngleThresholds();
 
                     if (mIsOverFrontAngleThreshold || mIsOverLateralAngleThreshold) {
+
                         if (mUserDidNotRespond) {
                             vibrateUserResponse(true);
-                        }
-                        else {
+                        } else {
                             delayUserResponse();
                         }
-                    }
-                    else {
+
+                    } else {
                         vibrateUserResponse(false);
                         mUserDidNotRespond = false;
                     }
 
                     updateAngleTextViews();
 
-                }
-                else {
+                } else {
                     calculateInitialAngles();
                 }
+            } else {
+                delayPositioning();
             }
         }
-        else {
-            delayPositioning();
-        }
     }
+
     //endregion
 
     //region Angle and Vibration Methods
@@ -139,6 +145,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void buttonStart(boolean start) {
         if (start) {
+            disableStartButton();
+
             // Start Acquisition
             mAcquiringOk = true;
 
@@ -156,22 +164,11 @@ public class MainActivity extends AppCompatActivity
             mAcceleration3LP = new float[3];
         }
         else {
-            // Put Flags & Counters to zero
-            mAcquiringOk = false;
-            mPositioningOk = false;
-            mInitialAnglesOk = false;
-            mUserDidNotRespond = false;
-            mPositioningVibrationOk = false;
-            mPositioningDelaySampleCount = 0;
-            mInitialAngleAcquisitionDelaySampleCount = 0;
-            mUserResponseDelaySampleCount = 0;
-            mPositioningDelaySampleCount = 0;
-            mPositioningVibrationDelaySampleCount = 0;
-            mLastAngleOverThreshold = AngleType.NONE;
-
             // Dismiss Vibrator and Aceelerometer
             mVibrator.cancel();
             mSensorManager.unregisterListener(this);
+
+            resetFlagAndCounters();
 
             // Clear Angle TextViews
             updateLeftAngleTextView(0);
@@ -255,7 +252,7 @@ public class MainActivity extends AppCompatActivity
                 mIsVibratingFrontAngleThreshold = false;
             }
         }
-        else {
+        else if (mIsVibratingFrontAngleThreshold || mIsVibratingLateralAngleThreshold) {
             mVibrator.cancel();
             mIsVibratingFrontAngleThreshold = false;
             mIsVibratingLateralAngleThreshold = false;
@@ -267,6 +264,10 @@ public class MainActivity extends AppCompatActivity
         int totalSamples = (int) (mUserResponseDelay / mSensorSamplingPeriod);
 
         if(mUserResponseDelaySampleCount == totalSamples && !mUserDidNotRespond) {
+            mUserDidNotRespond = true;
+            mUserResponseDelaySampleCount = 0;
+        }
+        else if (totalSamples == 0) {
             mUserDidNotRespond = true;
             mUserResponseDelaySampleCount = 0;
         }
@@ -288,6 +289,11 @@ public class MainActivity extends AppCompatActivity
         } else {
             mInitialFrontAngle /= totalSamples;
             mInitialLateralAngle /= totalSamples;
+
+            writeOnStartButton(getResources().getString(R.string.button_stop));
+            mVibrator.vibrate(1000);
+            enableStartButton();
+
             mInitialAnglesOk = true;
         }
     }
@@ -297,14 +303,19 @@ public class MainActivity extends AppCompatActivity
         int totalPositioningSamples = (int) (mPositioningDelay / mSensorSamplingPeriod);
         if(mPositioningDelaySampleCount == totalPositioningSamples && !mPositioningOk) {
             mPositioningOk = true;
+            writeOnStartButton(getResources().getString(R.string.button_acquiring_angles));
+            mPositioningSecondCount = mPositioningDelay/1000;
             return;
         }
         mPositioningDelaySampleCount++;
 
         int totalVibrationSamples = (int) (mPositioningVibrationDelay / mSensorSamplingPeriod);
-        if(mPositioningVibrationDelaySampleCount == totalVibrationSamples && !mPositioningOk) {
-            mPositioningDelaySampleCount = 0;
+        if (mPositioningVibrationDelaySampleCount == 1) {
             mVibrator.vibrate(300);
+            writeOnStartButton(String.valueOf(mPositioningSecondCount--));
+        }
+        else if(mPositioningVibrationDelaySampleCount == totalVibrationSamples) {
+            mPositioningVibrationDelaySampleCount = 0;
         }
         mPositioningVibrationDelaySampleCount++;
     }
@@ -343,6 +354,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupSlidingUI() {
+        mTabTitles =  new CharSequence[2];
+        mTabTitles[0] = getResources().getString(R.string.tab_main_title);
+        mTabTitles[1] = getResources().getString(R.string.tab_settings_title);
+
         setupActionBar();
         setupSlidingTabs();
         inflate();
@@ -391,36 +406,42 @@ public class MainActivity extends AppCompatActivity
     private void updateSettingsTab() {
         SeekBar seekBar;
         TextView textView;
+        String stringFromResources;
 
         // Front Angle SeekBar & TextView
         seekBar = (SeekBar) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.SEEKBAR_FRONT_ANGLE_THRESHOLD);
         seekBar.setProgress(mFrontAngleThreshold);
         textView = (TextView) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.TEXTVIEW_FRONT_ANGLE_THRESHOLD);
-        textView.setText("Ángulo Frontal: " + mFrontAngleThreshold + "°");
+        stringFromResources = getResources().getString(R.string.textview_front_angle);
+        textView.setText(stringFromResources + ": " + mFrontAngleThreshold + "°");
 
         // Front Vibration SeekBar & TextView
         seekBar = (SeekBar) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.SEEKBAR_FRONT_VIBRATION);
-        seekBar.setProgress((int)((1000/mFrontVibrationPattern[1])));
+        seekBar.setProgress((int) ((1000 / mFrontVibrationPattern[1])));
         textView = (TextView) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.TEXTVIEW_FRONT_VIBRATION);
-        textView.setText("Vibración Frontal: " + (1000/mFrontVibrationPattern[1]) + " Hz");
+        stringFromResources = getResources().getString(R.string.textview_front_vibration);
+        textView.setText(stringFromResources + ": " + (1000/mFrontVibrationPattern[1]) + " Hz");
 
         // Lateral Angle SeekBar & TextView
         seekBar = (SeekBar) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.SEEKBAR_LATERAL_ANGLE_THRESHOLD);
         seekBar.setProgress(mLateralAngleThreshold);
         textView = (TextView) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.TEXTVIEW_LATERAL_ANGLE_THRESHOLD);
-        textView.setText("Ángulo Lateral: " + mLateralAngleThreshold + "°");
+        stringFromResources = getResources().getString(R.string.textview_lateral_angle);
+        textView.setText(stringFromResources + ": " + mLateralAngleThreshold + "°");
 
         // Lateral Vibration SeekBar & TextView
         seekBar = (SeekBar) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.SEEKBAR_LATERAL_VIBRATION);
-        seekBar.setProgress((int)((1000/mLateralVibrationPattern[1])));
+        seekBar.setProgress((int) ((1000 / mLateralVibrationPattern[1])));
         textView = (TextView) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.TEXTVIEW_LATERAL_VIBRATION);
-        textView.setText("Vibración Lateral: " + (1000/mLateralVibrationPattern[1]) + " Hz");
+        stringFromResources = getResources().getString(R.string.textview_lateral_vibration);
+        textView.setText(stringFromResources + ": " + (1000/mLateralVibrationPattern[1]) + " Hz");
 
         // User Delay SeekBar & TextView
         seekBar = (SeekBar) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.SEEKBAR_DELAY);
-        seekBar.setProgress((int)(mUserResponseDelay /(1000*0.5)));
+        seekBar.setProgress((int) (mUserResponseDelay / (1000 * 0.5)));
         textView = (TextView) ((SettingsTab) (mViewPagerAdapter.getItem(1))).getView(SettingsTabView.TEXTVIEW_DELAY);
-        textView.setText("Tiempo de Espera: " + (mUserResponseDelay /1000) + " s");
+        stringFromResources = getResources().getString(R.string.textview_user_delay);
+        textView.setText(stringFromResources + ": " + (mUserResponseDelay /1000) + " s");
 
         // Do not load again
         mPreferencesLoaded = true;
@@ -526,7 +547,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(com.genomicalsoftware.posturometer.R.menu.menu_main, menu);
+        //getMenuInflater().inflate(com.genomicalsoftware.posturometer.R.menu.menu_main, menu);
         return true;
     }
 
@@ -538,13 +559,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == com.genomicalsoftware.posturometer.R.id.action_about) {
+        /*if (id == R.id.action_help) {
             return true;
         }
 
-        if (id == com.genomicalsoftware.posturometer.R.id.action_help) {
+        if (id == R.id.action_about) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -724,6 +745,35 @@ public class MainActivity extends AppCompatActivity
             textView.setTextColor(Color.BLACK);
             textView.setText("-");
         }
+    }
+
+    private void enableStartButton() {
+        Button button = (Button) ((MainTab) (mViewPagerAdapter.getItem(0))).getView(MainTabView.BUTTON_START);
+        button.setEnabled(true);
+    }
+
+    private void disableStartButton() {
+        Button button = (Button) ((MainTab) (mViewPagerAdapter.getItem(0))).getView(MainTabView.BUTTON_START);
+        button.setEnabled(false);
+    }
+
+    private void writeOnStartButton(String text) {
+        Button button = (Button) ((MainTab) (mViewPagerAdapter.getItem(0))).getView(MainTabView.BUTTON_START);
+        button.setText(text);
+    }
+
+    private void resetFlagAndCounters() {
+        mAcquiringOk = false;
+        mPositioningOk = false;
+        mInitialAnglesOk = false;
+        mUserDidNotRespond = false;
+        mPositioningVibrationOk = false;
+        mPositioningDelaySampleCount = 0;
+        mInitialAngleAcquisitionDelaySampleCount = 0;
+        mUserResponseDelaySampleCount = 0;
+        mPositioningDelaySampleCount = 0;
+        mPositioningVibrationDelaySampleCount = 0;
+        mLastAngleOverThreshold = AngleType.NONE;
     }
 
     //endregion

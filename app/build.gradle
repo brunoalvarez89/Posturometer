@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.ifelse.posturometer"
+        applicationId "com.genomicalsoftware.posturometer"
         minSdkVersion 9
         targetSdkVersion 23
         versionCode 1

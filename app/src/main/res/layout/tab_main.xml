@@ -132,7 +132,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Empezar"
+        android:text="@string/button_start"
         android:id="@+id/buttonStart"
         android:background="@drawable/custom_button"
         android:textColor="@drawable/selector_button_states"

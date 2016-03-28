@@ -22,7 +22,7 @@
         layout="@layout/tool_bar">
     </include>
 
-    <com.ifelse.posturometer.slidingtabs.SlidingTabLayout
+    <com.genomicalsoftware.posturometer.ui.slidingtabs.SlidingTabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

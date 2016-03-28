@@ -6,8 +6,7 @@ public enum MainTabView {
     TEXTVIEW_FRONT_ANGLE(1),
     TEXTVIEW_RIGHT_ANGLE(2),
     TEXTVIEW_LEFT_ANGLE(3),
-    BUTTON_START(4),
-    BUTTON_STOP(5);
+    BUTTON_START(4);
 
     private final int value;
 
@@ -30,9 +29,6 @@ public enum MainTabView {
 
             case 4:
                 return BUTTON_START;
-
-            case 5:
-                return BUTTON_STOP;
 
             default:
                 return ERROR;

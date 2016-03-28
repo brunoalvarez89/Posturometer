@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.genomicalsoftware.posturometer.R;
 
-
 public class SlidingTabLayout extends HorizontalScrollView{
 
     /**

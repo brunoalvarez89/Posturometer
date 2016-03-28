@@ -58,11 +58,10 @@ public class MainTab extends Fragment implements View.OnClickListener {
 
                 if (mStart) {
                     mMainTabInterface.buttonStart(true);
-                    mButtonStart.setText("Parar");
                 }
                 else {
                     mMainTabInterface.buttonStart(false);
-                    mButtonStart.setText("Empezar");
+                    mButtonStart.setText(getResources().getString(R.string.button_start));
                 }
                 break;
         }
